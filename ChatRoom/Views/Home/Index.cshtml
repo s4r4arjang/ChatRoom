@@ -1,5 +1,6 @@
-﻿<div class="container">
-    <div class="row">&nbsp;</div>
+﻿ 
+<div class="container">
+   @* <div class="row">&nbsp;</div>
     <div class="row">
         <div class="col-2">User</div>
         <div class="col-4">
@@ -9,17 +10,20 @@
     <div class="row">
         <div class="col-2">Message</div>
         <div class="col-4"><input type="text" id="messageInput" /></div>
-    </div>
+    </div>*@
     <div class="row">&nbsp;</div>
     <div class="row">
         <div class="col-6">
-            <input type="button" id="sendButton" value="Send Message" />
-
+           @* <input type="button" id="sendButton" value="Send Message" />*@
+            
             <a class="btn" asp-action="Logout" asp-controller="Account">logout</a>
+        </div>
+        <div class="col-6">
+           @* <input type="button" id="sendPVButton" value="Send private Message" />*@
         </div>
     </div>
 </div>
-<div class="row">
+@*<div class="row">
     <div class="col-12">
         <hr />
     </div>
@@ -29,5 +33,31 @@
         <ul id="messagesList"></ul>
     </div>
 </div>
+
+*@
+<div class="card" id="ChatBox">
+    <div class="card-header">
+        <b>پشتیبانی آنلاین</b>
+    </div>
+    <div id="MessagePanel">
+         <ul id="Messages">
+
+        </ul>
+
+        <div id="SendNewMessage">
+            <form id="NewMessageForm" class="row">
+                <input id="MessageInput" 
+                       class="form-control col-md-8 col-sm-8"
+                       placeholder="پیام خود را وارد کنید..." />
+                <button class="btn btn-success col-md-4 col-md-4">
+                    ارسال
+                </button>
+
+            </form>
+        </div>
+    </div>
+</div>
+<link href="~/css/ChatBox.css" rel="stylesheet"/>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/chat.js"></script>

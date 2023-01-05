@@ -1,6 +1,9 @@
-﻿using ChatRoom.Hubs;
+﻿using ChatRoom.Contexts;
+using ChatRoom.Hubs;
+using ChatRoom.Models.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,14 +11,17 @@ var builder = WebApplication.CreateBuilder(args);
 //builder.Services.AddRazorPages();
 
 // برا mvc
-builder.Services.AddControllersWithViews();
+var mvcBuilder = builder.Services.AddControllersWithViews();
 
-
+//mvcBuilder.AddRazorRuntimeCompilation();  
 //
 builder.Services.AddSignalR();
 
 
-
+string conectionString = "Data Source=.\\SQL2019;Initial Catalog=SignalRDB;Integrated Security=True;";
+builder.Services.AddDbContext<DataBaseContext>(option => option.UseSqlServer(conectionString));
+builder.Services.AddScoped<IChatRoomService, ChatRoomService>();
+builder.Services.AddScoped<IMessageService, MessageService>();
 //   با احراز هویت  و کوکی
 
 
@@ -69,5 +75,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapHub<ChatHub>("/chatHub");
+app.MapHub<SupportHub>("/supporthub");
 
 app.Run();

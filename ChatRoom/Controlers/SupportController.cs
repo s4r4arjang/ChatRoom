@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChatRoom.Controlers
 {
-    
-    public class Home : Controller
+    [Authorize]
+    public class SupportController : Controller
     {
         public IActionResult Index()
         {
