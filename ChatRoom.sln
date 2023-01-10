@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatRoom", "ChatRoom\ChatRoom.csproj", "{72FD0EC7-2CEB-4CA2-9671-DF292EDD562D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatRoom", "ChatRoom\ChatRoom.csproj", "{72FD0EC7-2CEB-4CA2-9671-DF292EDD562D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing", "Ticketing\Ticketing.csproj", "{1056842F-0F94-488C-89F2-2D5DC22D1AD8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{72FD0EC7-2CEB-4CA2-9671-DF292EDD562D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72FD0EC7-2CEB-4CA2-9671-DF292EDD562D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72FD0EC7-2CEB-4CA2-9671-DF292EDD562D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1056842F-0F94-488C-89F2-2D5DC22D1AD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1056842F-0F94-488C-89F2-2D5DC22D1AD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1056842F-0F94-488C-89F2-2D5DC22D1AD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1056842F-0F94-488C-89F2-2D5DC22D1AD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
