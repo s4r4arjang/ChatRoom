@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Ticketing.Models.Articles;
+using Ticketing.Models.Tickets;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("TicketDB");
