@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Ticketing.Models.Tickets;
 
 namespace Ticketing.Controllers
@@ -47,40 +49,54 @@ namespace Ticketing.Controllers
                
                 return View(ticket);
             }
-            
-            var res = new Ticket()
-            {
-                Title = ticket.Title,
-                //ArticleImage = Guid.NewGuid().ToString() + "." + Path.GetExtension(ticket.TicketImageFile.FileName),
-                Content = ticket.Content,
-                ShortDescription = ticket.ShortDescription
+            using var connection = new SqlConnection("Server=.\\SQL2019;Database=Ticket;Trusted_Connection=True;Trust Server Certificate=true");
+            var options = new DbContextOptionsBuilder<TicketContext>()
+                .UseSqlServer(connection)
+                .Options;
 
-            };
-            res.ArticleImage = new List<TicketImage>();
+            using var context1 = new TicketContext(options);
 
-            foreach (var item in ticket.TicketImageFile)
+            using var transaction = context1.Database.BeginTransaction();
+            try
             {
-                var img = new TicketImage()
+
+                var res = new Ticket()
                 {
-                    TicketId = res.Id,
-                    Image = Guid.NewGuid().ToString() + "." + Path.GetExtension(item.FileName)
-                };
-                res.ArticleImage.Add(img);
-              ticketContext.TicketImages.Add(img);  
+                    Title = ticket.Title,
+                    //ArticleImage = Guid.NewGuid().ToString() + "." + Path.GetExtension(ticket.TicketImageFile.FileName),
+                    Content = ticket.Content,
+                    ShortDescription = ticket.ShortDescription
 
+                };
+                res.ArticleImage = new List<TicketImage>();
+
+                foreach (var item in ticket.TicketFile)
+                {
+                    if ((item?.Length > 0) && ((item?.ContentType == "image/jpeg") || (item?.ContentType == "image/jpg")))
+                    {
+                        var img = new TicketImage()
+                        {
+                            TicketId = res.Id,
+                            Image = Guid.NewGuid().ToString() + "." + Path.GetExtension(item.FileName)
+                        };
+                        res.ArticleImage.Add(img);
+                        //ticketContext.TicketImages.Add(img);  
+                    }
+                   
+                }
+                ticketContext.Tickets.Add(res);
+                ticketContext.SaveChanges();
+               
+                if(ticket.TicketFile!=null)
+                SaveImageFile(ticket.TicketFile);
+
+                transaction.Commit();
             }
-            ticketContext.Tickets.Add(res);
-            ticketContext.SaveChanges();
-            var ticketFiles = new List<IFormFile>();
-            foreach (var item in ticket.TicketFile)
+            catch (Exception)
             {
-                ticketFiles.Add(item);
+               transaction.Rollback();  
             }
-            foreach (var item in ticket.TicketImageFile)
-            {
-                ticketFiles.Add(item);
-            }
-            SaveImageFile(ticketFiles);
+
             return RedirectToAction(nameof(Index));
         }
         private void SaveImageFile(List<IFormFile> files)
@@ -88,21 +104,20 @@ namespace Ticketing.Controllers
            
             foreach (var item in files)
             {
-                string innerPath;
+                string filePath;
                 if ((item?.Length > 0) && ((item?.ContentType == "image/jpeg") || (item?.ContentType == "image/jpg")))
+                    filePath =  Path.Combine(Environment.WebRootPath, "ImageFiles");
                
-                   innerPath= "\\ImageFiles\\";
                 else
-                innerPath= "\\TicketFiles\\";
+                   filePath= Path.Combine(Environment.WebRootPath, "TicketFiles");
 
-                string path_root = Environment.WebRootPath;
+                // string path_root = Environment.WebRootPath;
                 string newFileName = Guid.NewGuid().ToString() + Path.GetExtension(item.FileName);
-                string path_to_file = path_root +"\\"+ newFileName;
+               
+                if (!Directory.Exists(filePath))
 
-                if (!Directory.Exists(path_to_file))
-
-                    Directory.CreateDirectory(path_to_file);
-                using (FileStream fs = System.IO.File.Create(path_to_file))
+                    Directory.CreateDirectory(filePath);
+                using (FileStream fs = System.IO.File.Create(Path.Combine(filePath, newFileName)))
                 {
                     item.CopyTo(fs);
 

@@ -15,7 +15,6 @@ namespace Ticketing.Models.Tickets
         [Required(ErrorMessage = "{0} را وارد کنید")]
         [DisplayFormat(HtmlEncode = true)]
         public string Content { get; set; }
-        public List<IFormFile> TicketImageFile { get; set; }
         public List<IFormFile> TicketFile { get; set; }
     }
 }
